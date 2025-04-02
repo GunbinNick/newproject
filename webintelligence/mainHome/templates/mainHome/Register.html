@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Академия развития интеллекта</title>
+    <link rel="stylesheet" href={% static "mainHome/css/Auth.css" %} />
+</head>
+
+<body>
+    <div class="split-screen-container">
+        <!-- Левая часть экрана -->
+        <div class="left-section">
+            <!-- Панель с лого и языками -->
+            <div class="language-panel">
+                <img src="{% static 'mainHome/images/icon.jpg' %}" alt="Логотип" class="site-logo">
+                <div class="language-selector" id="languageSelector">
+                    <span class="current-language">RU</span>
+                    <ul class="language-dropdown" id="languageDropdown">
+                        <li>EN</li>
+                        <li>DE</li>
+                        <li>FR</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Основное изображение -->
+            <div class="main-image">
+                <img src="{% static 'mainHome/images/auth.jpg' %}" alt="Изображение авторизации">
+            </div>
+        </div>
+        
+        <!-- Разделительная линия -->
+        <div class="divider-line"></div>
+        
+        <!-- Правая часть экрана -->
+        <div class="right-section">
+            <!-- Панель навигации -->
+            <div class="auth-navigation">
+                <div class="auth-tabs">
+                    <button class="auth-tab-btn" id="loginBtn">Авторизация на платформе</button>
+                    <button class="auth-tab-btn active">Регистрация на платформе</button>
+                    <button class="auth-tab-btn" id="homeBtn">Вернуться на сайт</button>
+                </div>
+                <div class="tab-line"></div>
+            </div>
+            
+            <div class="auth-form-container">
+                <h2>регистрация</h2>
+                <form class="auth-form" method="post">
+                    {% csrf_token %}
+                    
+                    <!-- вывод ошибок -->
+                    {% if form.errors %}
+                    <div class="form-errors">
+                        {% for field in form %}
+                            {% for error in field.errors %}
+                                <p class="error">{{ error }}</p>
+                            {% endfor %}
+                        {% endfor %}
+                        {% for error in form.non_field_errors %}
+                            <p class="error">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    
+                    <!-- поля формы -->
+                    <div class="form-group">
+                        <label for="id_full_name">фио</label>
+                        {{ form.full_name }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_username">Логин</label>
+                        {{ form.username }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_email">Email</label>
+                        {{ form.email }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_password1">Пароль</label>
+                        {{ form.password1 }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_password2">Подтверждение пароля</label>
+                        {{ form.password2 }}
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">Зарегистрироваться</button>
+                </form>
+            </div>
+            
+            <!-- Упрощенный футер -->
+            <footer class="simple-footer">
+                <p>© 2023 Академия Развития Интеллекта. Все права защищены.</p>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('loginBtn').addEventListener('click', function() {
+            window.location.href = "{% url 'auth' %}";
+        });
+        
+        document.getElementById('homeBtn').addEventListener('click', function() {
+            window.location.href = "{% url 'home' %}";
+        });
+
+        // Обработчик для выпадающего списка языков
+        document.getElementById('languageSelector').addEventListener('click', function() {
+            document.getElementById('languageDropdown').classList.toggle('show');
+        });
+
+        // Закрытие выпадающего списка при клике вне его
+        window.addEventListener('click', function(event) {
+            if (!event.target.closest('.language-selector')) {
+                document.getElementById('languageDropdown').classList.remove('show');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Академия развития интеллекта</title>
+    <link rel="stylesheet" href={% static "mainHome/css/Main.css" %} />
+</head>
+
+<body>
+{% block navmenu %}
+    <div class="white-line">
+        <a href="{% url 'home' %}">
+            <img src={% static 'mainHome/images/icon.jpg' %} alt="Логотип" class="home-icon">
+        </a>
+    </div>
+    <header class="full-width-nav">
+        <nav>
+            <ul class="nav-list">
+                <li><a href="{% url 'about' %}" class="nav-btn">О нас</a></li>
+                <li><a href="{% url 'programs' %}" class="nav-btn">Программы</a></li>
+                <li><a href="./Events.html" class="nav-btn">События</a></li>
+                <li><a href="./News.html" class="nav-btn">Новости</a></li>
+                <li><a href="./Blog.html" class="nav-btn">Блог</a></li>
+                <li><a href="./Franch.html" class="nav-btn">Франшиза</a></li>
+                <li><a href="./Contacts.html" class="nav-btn">Контакты</a></li>
+                <li><a href="{% url 'auth' %}" class="nav-btn">Войти</a></li>
+            </ul>
+        </nav>
+    </header>
+{% endblock navmenu %}
+
+{% block content %}
+
+{% endblock %}
+
+</body>
+</html>
