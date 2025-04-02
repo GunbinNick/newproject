@@ -41,8 +41,8 @@
             <div class="auth-navigation">
                 <div class="auth-tabs">
                     <button class="auth-tab-btn active">Авторизация на платформе</button>
-                    <button class="auth-tab-btn" id="registerBtn">Регистрация на платформе</button>
-                    <button class="auth-tab-btn" id="homeBtn">Вернуться на сайт</button>
+                    <button class="auth-tab-btn" id="registerBtn" data-url="{% url 'register' %}">Регистрация на платформе</button>
+                    <button class="auth-tab-btn" id="homeBtn" data-url="{% url 'home' %}">Вернуться на сайт</button>
                 </div>
                 <div class="tab-line"></div>
             </div>
@@ -78,11 +78,10 @@
 
     <script>
         document.getElementById('registerBtn').addEventListener('click', function() {
-            window.location.href = "{% url 'register' %}";
+            window.location.href = this.dataset.url;
         });
-        
         document.getElementById('homeBtn').addEventListener('click', function() {
-            window.location.href = "{% url 'home' %}";
+            window.location.href = this.dataset.url;
         });
         // Обработчик для выпадающего списка языков
         document.getElementById('languageSelector').addEventListener('click', function() {

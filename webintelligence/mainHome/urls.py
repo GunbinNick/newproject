@@ -6,5 +6,5 @@ urlpatterns = [
     path('about/', about, name="about"),
     path('programs/', programs, name="programs"),
     path('authorization/', authorization, name="auth"),
-    path('register/', register, name="register"),
+    path('register/', RegisterView.as_view(), name="register"),
 ]
