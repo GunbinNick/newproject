@@ -31,6 +31,8 @@ class RegisterView(CreateView):
     def form_valid(self, form):
         response = super().form_valid(form)
         user = self.object
+
+        #Парсинг ФИО 
         full_name = form.cleaned_data['full_name']
         parts = full_name.split()
         user.first_name = parts[0] if parts else ''
@@ -43,7 +45,7 @@ class RegisterView(CreateView):
 class CustomLoginView(LoginView):
     form_class = LoginForm
     template_name = 'mainHome/Auth.html'
-    success_url = reverse_lazy('home')  
+    #success_url = reverse_lazy('home')  
     
     def form_valid(self, form):
         remember_me = form.cleaned_data.get('remember_me')

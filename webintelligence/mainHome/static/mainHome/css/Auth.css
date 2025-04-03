@@ -212,6 +212,8 @@ html, body {
     border-radius: var(--border-radius);
     font-size: 18px;
     transition: var(--transition);
+    box-sizing: border-box; 
+    margin: 0; 
 }
 
 .form-group input:focus {
@@ -293,4 +295,59 @@ html, body {
 
 .error {
     margin: 5px 0;
+}
+
+/* Стили для обертки выпадающего списка */
+.select-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.select-wrapper::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid var(--primary-blue);
+    pointer-events: none;
+}
+
+/* Стили для самого select */
+select.form-input {
+    width: 100%;
+    padding: 16px 20px;
+    border: 1px solid #ddd;
+    border-radius: var(--border-radius);
+    font-size: 16px;
+    color: var(--text-dark);
+    background-color: white;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+/* Состояния select */
+select.form-input:focus {
+    border-color: var(--primary-blue);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(41, 152, 255, 0.2);
+}
+
+/* Стили для вариантов */
+select.form-input option {
+    padding: 10px;
+    background: white;
+    color: var(--text-dark);
+}
+
+/* Для IE */
+select.form-input::-ms-expand {
+    display: none;
 }

@@ -48,7 +48,7 @@
             </div>
             
             <div class="auth-form-container">
-                <h2>регистрация</h2>
+                <h2>Регистрация</h2>
                 <form class="auth-form" method="POST">
                     {% csrf_token %}
                     
@@ -79,6 +79,14 @@
                     <div class="form-group">
                         {{ form.password2.label_tag }}
                         {{ form.password2 }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_role">Роль</label>
+                        <select name="role" id="id_role" class="form-input" required>
+                            <option value="" disabled selected>Выберите вашу роль</option>
+                            <option value="student">Ученик</option>
+                            <option value="parent">Родитель</option>
+                        </select>
                     </div>
                     
                     <button type="submit" class="submit-btn">Зарегистрироваться</button>
