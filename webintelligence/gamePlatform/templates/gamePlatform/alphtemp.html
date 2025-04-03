@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Найди букву</title>
+    <link rel="stylesheet" href="{% static 'gameplat/css/alph.css' %}">
+</head>
+<body>
+    <div class="game-container">
+        <div class="header">
+            <div class="title">Найди букву</div>
+            <div class="settings">
+                <div>Уровень обучения</div>
+                <div>Размер поля: <span id="field-size">4x4</span></div>
+                <div>Режим: <span id="game-mode">Лёгкий</span></div>
+                <div>Подсказки: <span id="hints-mode">OFF</span></div>
+            </div>
+        </div>
+        <div class="game-area">
+            <div class="target-letter" id="target-letter"></div>
+            <div class="letter-grid" id="letter-grid"></div>
+        </div>
+        <div class="footer">
+            <button id="reset-button">Сброс</button>
+            <button id="finish-button">Завершить игру</button>
+        </div>
+    </div>
+    <script src="{% static 'gameplat/js/alphscript.js' %}"></script>
+</body>
+</html>

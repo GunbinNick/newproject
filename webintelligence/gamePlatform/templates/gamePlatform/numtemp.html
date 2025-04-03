@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Найди пару</title>
+    <link rel="stylesheet" href="{% static 'gameplat/css/num.css' %}"> 
+</head>
+<body>
+    <div class="game-container">
+        <div class="header">
+            <div class="title">Найди пару</div>
+            <div class="settings">
+                <div>Уровень обучения: 
+                    <select id="level-select">
+                        <option value="1">Уровень 1</option>
+                        <option value="2">Уровень 2</option>
+                        <option value="3">Уровень 3</option>
+                        <option value="4">Уровень 4</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="game-area">
+            <div class="number-grid" id="number-grid"></div>
+        </div>
+        <div class="footer">
+            <button id="reset-button">Сброс</button>
+            <button id="finish-button">Завершить игру</button>
+        </div>
+    </div>
+    <script src="{% static 'gameplat/js/numscript.js' %}"></script> 
+</body>
+</html>
