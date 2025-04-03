@@ -50,22 +50,53 @@
             <!-- Форма авторизации -->
             <div class="auth-form-container">
                 <h2>Вход в личный кабинет</h2>
-                <form class="auth-form" method="post">
+                {% if form.errors %}
+                <div class="form-errors">
+                    неверный логин или пароль. пожалуйста, попробуйте снова.
+                </div>
+                {% endif %}
+                
+                <form method="post" class="auth-form">
                     {% csrf_token %}
+                    
+                    <!-- Поле логина -->
                     <div class="form-group">
-                        <label for="login">Логин или Email</label>
-                        <input type="text" id="login" name="username" placeholder="Введите ваш логин или email">
+                        <label for="login-input">Логин или Email</label>
+                        <input type="text" 
+                               name="username" 
+                               id="login-input"
+                               class="form-input"
+                               placeholder="Введите ваш логин или email"
+                               required>
                     </div>
+                    
+                    <!-- Поле пароля -->
                     <div class="form-group">
-                        <label for="password">Пароль</label>
-                        <input type="password" id="password" name="password" placeholder="Введите ваш пароль">
+                        <label for="password-input">Пароль</label>
+                        <input type="password" 
+                               name="password" 
+                               id="password-input"
+                               class="form-input"
+                               placeholder="Введите ваш пароль"
+                               required>
                     </div>
+                    
+                    <!-- Чекбокс "Запомнить меня" -->
                     <div class="form-group remember-me">
-                        <input type="checkbox" id="remember" name="remember">
-                        <label for="remember">Всегда запоминать меня на этом устройстве</label>
+                        <input type="checkbox" 
+                               name="remember_me" 
+                               id="remember-me"
+                               class="remember-checkbox">
+                        <label for="remember-me">Запомнить меня</label>
                     </div>
+                    
+                    <!-- Кнопка отправки -->
                     <button type="submit" class="submit-btn">Войти</button>
-                    <a href="#" class="forgot-password">Забыли пароль?</a>
+                    
+                    <!-- Ссылка на восстановление пароля -->
+                    <div class="auth-links">
+                        <a href="#" class="forgot-password">Забыли пароль?</a>
+                    </div>
                 </form>
             </div>
             

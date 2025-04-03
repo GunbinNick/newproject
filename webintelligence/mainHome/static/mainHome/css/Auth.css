@@ -19,6 +19,11 @@ html, body {
     position: relative;
 }
 
+.auth-links {
+    text-align: center;
+    margin-top: 20px;
+}
+
 .auth-tabs {
     display: flex;
     justify-content: center;

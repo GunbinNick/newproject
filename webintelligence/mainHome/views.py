@@ -1,8 +1,9 @@
 from django.http import HttpResponse
 from django.shortcuts import render
-from django.views.generic import CreateView
+from django.views.generic import CreateView, FormView
 from django.urls import reverse_lazy
 from django.contrib.auth import login
+from django.contrib.auth.views import LoginView
 from .forms import * 
 from django.contrib.auth.models import User
 
@@ -37,4 +38,16 @@ class RegisterView(CreateView):
         user.save()
         
         login(self.request, user)
+        return response
+    
+class CustomLoginView(LoginView):
+    form_class = LoginForm
+    template_name = 'mainHome/Auth.html'
+    success_url = reverse_lazy('home')  
+    
+    def form_valid(self, form):
+        remember_me = form.cleaned_data.get('remember_me')
+        if not remember_me:
+            self.request.session.set_expiry(0)  # Сессия закроется при закрытии браузера
+        response = super().form_valid(form)
         return response

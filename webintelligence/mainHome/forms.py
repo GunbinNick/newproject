@@ -36,3 +36,28 @@ class RegisterForm(UserCreationForm):
         widgets = {
             'username': forms.TextInput(attrs={'class': 'form-input'}),
         }
+
+class LoginForm(AuthenticationForm):
+    username = forms.CharField(
+        label="Логин или Email",
+        widget=forms.TextInput(attrs={
+            'class': 'form-input',
+            'placeholder': 'Введите ваш логин или email',
+            'id': 'login-input'
+        })
+    )
+    password = forms.CharField(
+        label="Пароль",
+        widget=forms.PasswordInput(attrs={
+            'class': 'form-input',
+            'placeholder': 'Введите ваш пароль',
+            'id': 'password-input'
+        })
+    )
+    remember_me = forms.BooleanField(
+        required=False,
+        widget=forms.CheckboxInput(attrs={
+            'class': 'remember-checkbox',
+            'id': 'remember-me'
+        })
+    )
