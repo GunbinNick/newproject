@@ -45,7 +45,8 @@ class RegisterView(CreateView):
 class CustomLoginView(LoginView):
     form_class = LoginForm
     template_name = 'mainHome/Auth.html'
-    #success_url = reverse_lazy('home')  
+    def get_success_url(self): 
+        return reverse_lazy('home')  
     
     def form_valid(self, form):
         remember_me = form.cleaned_data.get('remember_me')
