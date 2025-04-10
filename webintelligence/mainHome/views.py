@@ -7,7 +7,6 @@ from django.contrib.auth.views import LoginView
 from .forms import * 
 from django.contrib.auth.models import User
 
-
 def Home(request):
     return render(request, "mainHome/Main.html")
 
@@ -26,7 +25,8 @@ def register(request):
 class RegisterView(CreateView):
     form_class = RegisterForm
     template_name = 'mainHome/Register.html' 
-    success_url = reverse_lazy('home')
+    def get_success_url(self): 
+        return reverse_lazy('gamePlatform:platform')
 
     def form_valid(self, form):
         response = super().form_valid(form)
@@ -46,7 +46,7 @@ class CustomLoginView(LoginView):
     form_class = LoginForm
     template_name = 'mainHome/Auth.html'
     def get_success_url(self): 
-        return reverse_lazy('home')  
+        return reverse_lazy('gamePlatform:platform')  
     
     def form_valid(self, form):
         remember_me = form.cleaned_data.get('remember_me')

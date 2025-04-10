@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Академия развития интеллекта | Личный кабинет</title>
+    <link rel="stylesheet" href="{% static 'gamePlatform/css/styles.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="platform">
+        <!-- Левое меню -->
+        <aside class="sidebar">
+            <div class="logo">Аллах-Бабах</div>
+            <nav>
+                <a href="#" class="active"><i class="fas fa-home"></i> Главная</a>
+                <a href="#"><i class="fas fa-book"></i> Мои курсы</a>
+                <a href="#"><i class="fas fa-gamepad"></i> Игры</a>
+                <a href="#"><i class="fas fa-calendar"></i> Расписание</a>
+                <a href="#"><i class="fas fa-chart-line"></i> Статистика</a>
+                <a href="#"><i class="fas fa-question-circle"></i> Поддержка</a>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="#"><i class="fas fa-cog"></i> Настройки</a>
+                <a href="{% url 'gamePlatform:logout' %}"><i class="fas fa-sign-out-alt"></i> Выйти</a>
+            </div>
+        </aside>
+
+        <!-- Центральный контент -->
+        <main class="content">
+            <div class="courses-carousel">
+                <h2>Мои курсы</h2>
+                <div class="carousel">
+                    <div class="course-card">
+                        <div class="course-icon" style="background: #FF6B6B;">🧮</div>
+                        <h3>Ментальная арифметика</h3>
+                        <p>Уровень: Начинающий</p>
+                    </div>
+                    <div class="course-card">
+                        <div class="course-icon" style="background: #4ECDC4;">🧠</div>
+                        <h3>Тренировка памяти</h3>
+                        <p>Уровень: Продвинутый</p>
+                    </div>
+                    <div class="course-card">
+                        <div class="course-icon" style="background: #45B7D1;">📖</div>
+                        <h3>Скорочтение</h3>
+                        <p>Уровень: Средний</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="course-details">
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="schedule">Расписание</button>
+                    <button class="tab-btn" data-tab="games">Игры</button>
+                    <button class="tab-btn" data-tab="stats">Статистика</button>
+                </div>
+
+                <div class="tab-content">
+                    <!-- Расписание -->
+                    <div class="tab-pane active" id="schedule">
+                        <h3>Ближайшие занятия</h3>
+                        <ul class="schedule">
+                            <li>Пн, 12 июня - Ментальная арифметика</li>
+                        </ul>
+                    </div>
+
+                    <!-- Игры -->
+                    <div class="tab-pane" id="games">
+                        <h3>Игры</h3>
+                        <a href="{% url 'gamePlatform:alphGame' %}" class="game-card">
+                        <span>Игра на поиск буквы</span>
+                        </a>
+
+                        <a href="{% url 'gamePlatform:numGame' %}" class="game-card">
+                        <span>Игра на карточки с цифрами</span>
+                        </a>
+                    </div>
+
+                    <!-- Статистика -->
+                    <div class="tab-pane" id="stats">
+                        <h3>Статистика</h3>
+                        <div class="stat-item">Пройдено: 3 курса</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Правая панель пользователя -->
+        <div class="user-panel">
+            <div class="user-profile">
+                <div class="avatar">👦</div>
+                <h3>Иван Петров</h3>
+                <p>ID: QB-12345</p>
+                <div class="progress-bar">
+                    <div class="progress" style="width: 65%;"></div>
+                    <span>65% завершено</span>
+                </div>
+            </div>
+
+            <div class="user-stats">
+                <h4>Общая статистика</h4>
+                <div class="stat-item">
+                    <span>Дней подряд:</span>
+                    <strong>12</strong>
+                </div>
+                <div class="stat-item">
+                    <span>Пройдено курсов:</span>
+                    <strong>3</strong>
+                </div>
+                <div class="stat-item">
+                    <span>Очков:</span>
+                    <strong>1240</strong>
+                </div>
+            </div>
+
+            <div class="user-courses">
+                <h4>Активные курсы</h4>
+                <ul>
+                    <li>Ментальная арифметика</li>
+                    <li>Тренировка памяти</li>
+                    <li>Скорочтение</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'gamePlatform/js/script.js' %}"></script>
+</body>
+</html>
