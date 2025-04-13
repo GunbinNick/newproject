@@ -26,12 +26,15 @@
                 <li><a href="./Blog.html" class="nav-btn">Блог</a></li>
                 <li><a href="./Franch.html" class="nav-btn">Франшиза</a></li>
                 <li><a href="./Contacts.html" class="nav-btn">Контакты</a></li>
+                {% if request.user.is_authenticated %}
+                <li><a href="{% url 'gamePlatform:platform' %}" class="nav-btn">Платформа</a></li>
+                {% else %}
                 <li><a href="{% url 'mainHome:auth' %}" class="nav-btn">Войти</a></li>
+                {% endif %}
             </ul>
         </nav>
     </header>
 {% endblock navmenu %}
-
 {% block content %}
 
 {% endblock %}
