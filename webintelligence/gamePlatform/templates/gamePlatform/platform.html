@@ -71,13 +71,13 @@
                     <!-- Игры -->
                     <div class="tab-pane" id="games">
                         <h3>Игры</h3>
-                        <a href="{% url 'gamePlatform:alphGame' %}" class="game-card">
-                        <span>Игра на поиск буквы</span>
-                        </a>
-
-                        <a href="{% url 'gamePlatform:numGame' %}" class="game-card">
-                        <span>Игра на карточки с цифрами</span>
-                        </a>
+                        {% for game in games %}
+                            <li>
+                                <a href="{% url 'game-detail' Game.slug %}" class="game-card">
+                                <span>{{ game.title }}</span>
+                                </a>
+                            </li>
+                        {% endfor %}
                     </div>
 
                     <!-- Статистика -->
