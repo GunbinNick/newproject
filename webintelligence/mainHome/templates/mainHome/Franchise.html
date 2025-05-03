@@ -1,0 +1,143 @@
+{% extends 'mainHome/Base.html' %}
+{% load static %}
+
+{% block css %}
+{{ block.super}}
+<link rel="stylesheet" href={% static "mainHome/css/franchise.css" %} />
+{% endblock %}
+
+{% block content %}
+<div class="content-container">
+    <main>
+        <section class="hero-section">
+            <div class="hero-container">
+                <div class="hero-content">
+                    <h2>Академия</h2>
+                    <h1>Развития Интеллекта</h1>
+                    <p>Присоединяйтесь! Пробный урок - Бесплатно</p>
+                    <button class="hero-button">ЗАПИСАТЬСЯ</button>
+                </div>
+            </div>
+        </section>
+
+        <h3 class="section-title-white">Франшиза</h3>
+
+        <section class="hero-section">
+            <div class="hero-container">
+                <div class="hero-content">
+                    <h1>Франшиза академии развития интеллекта для детей от 5 до 16 лет</h1>
+                    <p>Центр дополнительного образования детей — откройте готовый бизнес по франшизе</p>
+                    <button class="hero-button">Оставить заявку</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Франшиза -->
+        <section class="programs-section">
+            <div class="container">
+                <div class="programs-grid">
+                    <div class="program-card">
+                        <div class="card-content">
+                            <h4>ГОТОВЫЙ БИЗНЕС</h4>
+                            <p>Полностью готовый бизнес-план и методики обучения</p>
+                        </div>
+                        <div class="card-icon"></div>
+                        <button class="program-button">Подробнее</button>
+                    </div>
+                    <div class="program-card">
+                        <div class="card-content">
+                            <h4>ПОДДЕРЖКА</h4>
+                            <p>Постоянная поддержка и обучение ваших преподавателей</p>
+                        </div>
+                        <div class="card-icon"></div>
+                        <button class="program-button">Подробнее</button>
+                    </div>
+                    <div class="program-card">
+                        <div class="card-content">
+                            <h4>МАРКЕТИНГ</h4>
+                            <p>Проверенные маркетинговые стратегии и материалы</p>
+                        </div>
+                        <div class="card-icon"></div>
+                        <button class="program-button">Подробнее</button>
+                    </div>
+                    <div class="program-card">
+                        <div class="card-content">
+                            <h4>ПРИБЫЛЬ</h4>
+                            <p>Высокая рентабельность и быстрая окупаемость</p>
+                        </div>
+                        <div class="card-icon"></div>
+                        <button class="program-button">Подробнее</button>
+                    </div>
+                </div>
+                
+                <div class="franchise-description">
+                    <div class="description-text">
+                        <h2 class="big-text">Франшиза Академии Развития Интеллекта</h2>
+                        <p class="medium-text">Уникальная возможность стать частью успешной сети образовательных центров</p>
+                    </div>
+                    
+                    <div class="franchise-stats">
+                        <div class="stat-item">
+                            <span class="stat-number">5000+</span>
+                            <span class="stat-label">учеников</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">15</span>
+                            <span class="stat-label">стран</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">10</span>
+                            <span class="stat-label">лет на рынке</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">50+</span>
+                            <span class="stat-label">филиалов</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="franchise-map">
+                    <!-- Интерактивная карта -->
+                    <iframe src="https://www.google.com/maps/embed?pb=..." width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+                
+                <button class="franchise-buy-button">КУПИТЬ ГОТОВЫЙ БИЗНЕС</button>
+            </div>
+        </section>
+    </main>
+</div>
+
+<!-- Футер -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-block">
+                <span class="logo">Logo</span>
+                <p class="copyright">Все права на товарный знак защищены. Копирование материалов без согласия авторов проекта запрещено ИП Васильева Татьяна Игоревна ИНН 860324040540 ОГРН 312860329300037</p>
+            </div>
+
+            <div class="footer-block">
+                <h4 class="footer-title">8 922 795 06 40</h4>
+                <ul class="footer-list">
+                    <li>Онлайн</li>
+                    <li>Академия</li>
+                    <li>Робототехника</li>
+                    <li>Летний лагерь</li>
+                </ul>
+            </div>
+
+            <div class="footer-block">
+                <ul class="footer-list">
+                    <li>Договор оферты</li>
+                    <li>Политика конфиденциальности</li>
+                    <li>Государственная лицензия</li>
+                </ul>
+            </div>
+        </div>
+
+        <hr class="footer-divider">
+
+        <p class="footer-bottom">Сайт разработан ITCLAN - Digital Agency</p>
+    </div>
+</footer>
+{% endblock %}

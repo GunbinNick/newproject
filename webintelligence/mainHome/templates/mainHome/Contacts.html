@@ -1,0 +1,83 @@
+{% extends 'mainHome/Base.html' %}
+{% load static %}
+
+{% block css %}
+{{ block.super}}
+<link rel="stylesheet" href={% static "mainHome/css/contacts.css" %} />
+{% endblock %}
+
+{% block content %}
+<div class="content-container">
+    <main>
+        <section class="hero-section">
+            <div class="hero-container">
+                <div class="hero-content">
+                    <h2>Контакты</h2>
+                    <h1>Академии Развития Интеллекта</h1>
+                    <p>Присоединяйтесь! Пробный урок - Бесплатно</p>
+                    <button class="hero-button">ЗАПИСАТЬСЯ</button>
+                </div>
+            </div>
+        </section>
+
+        <h3 class="section-title-white">Контакты</h3>
+
+        <!-- Контакты -->
+        <section class="contacts-section">
+            <div class="container">
+                <h3 class="section-title-white">Контакты</h3>
+                <h4 class="city-select-title">Выберите город</h4>
+                
+                <div class="city-search">
+                    <input type="text" placeholder="Поиск по городам..." class="search-input">
+                </div>
+                
+                <div class="city-list">
+                    <ul>
+                        <li>Москва</li>
+                        <li>Санкт-Петербург</li>
+                        <li>Екатеринбург</li>
+                        <li>Новосибирск</li>
+                        <li>Казань</li>
+                        <li>Нижний Новгород</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<!-- Футер -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-block">
+                <span class="logo">Logo</span>
+                <p class="copyright">Все права на товарный знак защищены. Копирование материалов без согласия авторов проекта запрещено ИП Васильева Татьяна Игоревна ИНН 860324040540 ОГРН 312860329300037</p>
+            </div>
+
+            <div class="footer-block">
+                <h4 class="footer-title">8 922 795 06 40</h4>
+                <ul class="footer-list">
+                    <li>Онлайн</li>
+                    <li>Академия</li>
+                    <li>Робототехника</li>
+                    <li>Летний лагерь</li>
+                </ul>
+            </div>
+
+            <div class="footer-block">
+                <ul class="footer-list">
+                    <li>Договор оферты</li>
+                    <li>Политика конфиденциальности</li>
+                    <li>Государственная лицензия</li>
+                </ul>
+            </div>
+        </div>
+
+        <hr class="footer-divider">
+
+        <p class="footer-bottom">Сайт разработан ITCLAN - Digital Agency</p>
+    </div>
+</footer>
+{% endblock %}

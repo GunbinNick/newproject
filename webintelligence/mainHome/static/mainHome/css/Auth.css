@@ -99,6 +99,7 @@ html, body {
     justify-content: space-between;
     padding: 40px;
     background-color: var(--white);
+    background-image: url("../images/1.jpg");
 }
 
 .divider-line {

@@ -16,6 +16,21 @@ def about(request):
 def programs(request):
     return render(request, "mainHome/Programs.html")
 
+def contacts(request):
+    return render(request, "mainHome/Contacts.html")
+
+def news(request):
+    return render(request, "mainHome/News.html")
+
+def events(request):
+    return render(request, "mainHome/Events.html")
+
+def franchise(request):
+    return render(request, "mainHome/Franchise.html")
+
+def blog(request):
+    return render(request, "mainHome/Blog.html")
+
 def authorization(request):
     return render(request, "mainHome/Auth.html")
 
