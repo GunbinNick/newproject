@@ -36,7 +36,7 @@
                 <div class="carousel">
                     <div class="course-card">
                         <div class="course-icon" style="background: #FF6B6B;">🧮</div>
-                        <h3>Ментальная арифметика</h3>
+                        <h3>Робототехника</h3>
                         <p>Уровень: Начинающий</p>
                     </div>
                     <div class="course-card">
@@ -52,37 +52,38 @@
                 </div>
             </div>
 
+            <!-- Игры -->
+            <h2 id="game-header">Игры</h2>
+            <div class="games-container">
+                {% for game in games %}
+                    <div class="game-box">
+                        <a href="{% url 'gamePlatform:game_detail' game.slug%}" class="game-card">
+                        <span class="game-title">{{ game.title }}</span>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+
             <div class="course-details">
                 <div class="tabs">
                     <button class="tab-btn active" data-tab="schedule">Расписание</button>
-                    <button class="tab-btn" data-tab="games">Игры</button>
                     <button class="tab-btn" data-tab="stats">Статистика</button>
                 </div>
 
                 <div class="tab-content">
                     <!-- Расписание -->
                     <div class="tab-pane active" id="schedule">
-                        <h3>Ближайшие занятия</h3>
+                        <h2>Ближайшие занятия</h2>
                         <ul class="schedule">
                             <li>Пн, 12 июня - Ментальная арифметика</li>
                         </ul>
                     </div>
 
-                    <!-- Игры -->
-                    <div class="tab-pane" id="games">
-                        <h3>Игры</h3>
-                        {% for game in games %}
-                            <li>
-                                <a href="{% url 'game-detail' Game.slug %}" class="game-card">
-                                <span>{{ game.title }}</span>
-                                </a>
-                            </li>
-                        {% endfor %}
-                    </div>
+
 
                     <!-- Статистика -->
                     <div class="tab-pane" id="stats">
-                        <h3>Статистика</h3>
+                        <h2>Статистика</h2>
                         <div class="stat-item">Пройдено: 3 курса</div>
                     </div>
                 </div>

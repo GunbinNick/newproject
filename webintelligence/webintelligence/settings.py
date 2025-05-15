@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-3pknj=h*4iu(jk)6xouc25^-x(u$kcmud$a%047cj&h_j&2&)+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['itcity.online', 'www.itcity.online', 'localhost', '127.0.0.1']
 
 # Application definition
 
@@ -124,7 +124,7 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'gamePlatform/games')
+    os.path.join(BASE_DIR, 'gamePlatform/templates/games')
 ]
 
 # Default primary key field type

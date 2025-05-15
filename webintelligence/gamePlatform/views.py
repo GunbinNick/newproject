@@ -3,21 +3,16 @@ from django.contrib.auth import logout
 import os
 from django.conf import settings
 from .models import Game
+from django.views.generic import ListView
 
 def platform(request):
-    return render(request, "gamePlatform/platform.html")
+    games = Game.objects.all()
+    return render(request, "gamePlatform/platform.html", {'games' : games})
 
 def logout_user(request):
     logout(request)
     return redirect('mainHome:home')
 
-def game_list(request):
-    """Список всех игр (без пагинации для простоты)."""
-    games = Game.objects.all()  # Просто все игры
-    print(games)
-    return render(request, "games/game_list.html", {"games": games})
-
 def game_detail(request, slug):
-    """Отображение конкретной игры."""
     game = get_object_or_404(Game, slug=slug)
-    return render(request, f"games/{game.slug}/index.html")  # Путь к игре
+    return render(request, f'gamePlatform/games/{game.slug}/index.html', {'game': game})

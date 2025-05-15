@@ -1,14 +1,19 @@
 {% extends 'mainHome/Base.html' %}
 {% load static %}
 
+{% block css %}
+{{ block.super}}
+<link rel="stylesheet" href={% static "mainHome/css/programs.css" %} />
+{% endblock %}
+
 {% block content %}
 <div class="content-container">
     <main>
         <section class="hero-section">
             <div class="hero-container">
                 <div class="hero-content">
-                    <h2>Академия</h2>
-                    <h1>Развития Интеллекта</h1>
+                    <h2>Программы</h2>
+                    <h1>Академии Развития Интеллекта</h1>
                     <p>Присоединяйтесь! Пробный урок - Бесплатно</p>
                     <button class="hero-button">ЗАПИСАТЬСЯ</button>
                 </div>
@@ -38,8 +43,8 @@
                     </div>
                     <div class="program-card">
                         <div class="card-content">
-                            <h4>МЕНТАЛЬНАЯ АРИФМЕТИКА</h4>
-                            <p>Развитие когнитивных способностей через устный счет</p>
+                            <h4>РОБОТОТЕХНИКА</h4>
+                            <p>Развитие творческих способностей и абстрактного мышления</p>
                         </div>
                         <div class="card-icon"></div>
                         <button class="program-button">Подробнее</button>

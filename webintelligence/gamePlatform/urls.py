@@ -5,7 +5,6 @@ app_name = 'gamePlatform'
 
 urlpatterns = [
     path('', platform, name="platform"),
-    path("games/", game_list, name="game-list"),
-    path("games/<slug:slug>/", game_detail, name="game-detail"),
+    path('game/<slug:slug>', game_detail, name="game_detail"),
     path('logout/', logout_user, name='logout'),
 ]

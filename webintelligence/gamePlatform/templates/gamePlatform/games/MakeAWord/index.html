@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Составь слово из слогов</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: url('https://sun9-66.userapi.com/impg/s63oDmIp-Dc4yoavhNIqj9ia8x6iS4d_0ZnQnA/TJANUqGbA1w.jpg?size=2560x1633&quality=95&sign=a0cce2ae87afa729fbd469ec4f5f7e54&type=album') no-repeat center center fixed;
+            background-size: cover;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Стили для кастомных иконок */
+        .corner-icon {
+            position: fixed;
+            z-index: -1;
+            width: 80px;
+            height: 80px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            filter: drop-shadow(0 0 10px rgba(0,0,0,0.3));
+            opacity: 0.85;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .top-left {
+            top: 20px;
+            left: 20px;
+            background-image: url('https://cdn-icons-png.flaticon.com/512/447/447031.png');
+            animation-delay: 0s;
+        }
+        
+        .top-right {
+            top: 20px;
+            right: 20px;
+            background-image: url('https://cdn-icons-png.flaticon.com/512/3652/3652191.png');
+            animation-delay: 1s;
+        }
+        
+        .bottom-left {
+            bottom: 20px;
+            left: 20px;
+            background-image: url('https://cdn-icons-png.flaticon.com/512/2936/2936886.png');
+            animation-delay: 2s;
+        }
+        
+        .bottom-right {
+            bottom: 20px;
+            right: 20px;
+            background-image: url('https://cdn-icons-png.flaticon.com/512/619/619032.png');
+            animation-delay: 3s;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(5deg); }
+        }
+
+        .game-container {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            width: 90%;
+            max-width: 800px;
+            text-align: center;
+            position: relative;
+        }
+        
+        h1 {
+            color: #F8CB79;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        /* Стили для экрана выбора уровней */
+        .levels-container {
+            margin: 20px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .levels-row {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .level {
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 30%;
+            min-width: 150px;
+            border-left: 5px solid #F8CB79;
+        }
+        
+        .level.unlocked {
+            background: rgba(248, 203, 121, 0.2);
+        }
+        
+        .level.locked {
+            background: rgba(200, 200, 200, 0.5);
+            cursor: not-allowed;
+        }
+        
+        .level-info {
+            text-align: center;
+        }
+        
+        .level-title {
+            font-weight: bold;
+            font-size: 16px;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .level-subtitle {
+            font-size: 12px;
+            color: #7f8c8d;
+        }
+        
+        .level-status {
+            font-weight: bold;
+            padding: 3px 8px;
+            border-radius: 15px;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        
+        .unlocked .level-status {
+            background: #2ecc71;
+            color: white;
+        }
+        
+        .locked .level-status {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        /* Стили для игрового экрана */
+        .game-section {
+            display: none;
+        }
+        
+        .word-display {
+            min-height: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .word-slot {
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            box-shadow: 0 3px 5px rgba(0,0,0,0.1);
+            border: 2px dashed #3498db;
+        }
+        
+        .word-slot.filled {
+            background: #e8f4fc;
+            border: 2px solid #2980b9;
+        }
+        
+        .syllables-container {
+            min-height: 200px;
+            position: relative;
+            margin: 30px 0;
+            border: 2px dashed rgba(52, 152, 219, 0.3);
+            border-radius: 10px;
+        }
+        
+        .syllable {
+            width: 60px;
+            height: 60px;
+            background: #3498db;
+            color: white;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: grab;
+            user-select: none;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: absolute;
+        }
+        
+        .syllable:hover {
+            transform: scale(1.05);
+            box-shadow: 0 7px 14px rgba(0,0,0,0.2);
+        }
+        
+        .syllable.dragging {
+            cursor: grabbing;
+            transform: scale(1.1);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            z-index: 100;
+        }
+        
+        .syllable.used {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        #checkBtn {
+            background: #2ecc71;
+            color: white;
+        }
+        
+        #checkBtn:hover {
+            background: #27ae60;
+        }
+        
+        #resetBtn {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        #resetBtn:hover {
+            background: #c0392b;
+        }
+        
+        .back-btn {
+            background: #9b59b6;
+            color: white;
+            margin-top: 20px;
+        }
+        
+        .back-btn:hover {
+            background: #8e44ad;
+        }
+        
+        .message {
+            margin: 20px 0;
+            min-height: 24px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .correct {
+            color: #27ae60;
+        }
+        
+        .incorrect {
+            color: #e74c3c;
+        }
+        
+        .score {
+            font-size: 18px;
+            margin-top: 10px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        @media (max-width: 768px) {
+            .levels-row {
+                flex-wrap: wrap;
+            }
+            
+            .level {
+                width: 45%;
+                min-width: 120px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .level {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Декоративные иконки -->
+    <div class="corner-icon top-left"></div>
+    <div class="corner-icon top-right"></div>
+    <div class="corner-icon bottom-left"></div>
+    <div class="corner-icon bottom-right"></div>
+
+    <div class="game-container">
+        <!-- Экран выбора уровней -->
+        <div id="levelsSection">
+            <h1>Составь слово</h1>
+            <h3>Выбор Уровней</h3>
+            
+            <div class="levels-container">
+                <!-- Первая строка с 3 уровнями -->
+                <div class="levels-row">
+                    <div class="level unlocked" data-level="1" id="level1">
+                        <div class="level-info">
+                            <div class="level-title">Уровень 1</div>
+                            <div class="level-subtitle">Простые слова</div>
+                        </div>
+                        <div class="level-status">Открыто</div>
+                    </div>
+                    
+                    <div class="level locked" data-level="2" id="level2">
+                        <div class="level-info">
+                            <div class="level-title">Уровень 2</div>
+                            <div class="level-subtitle">3 слога</div>
+                        </div>
+                        <div class="level-status">Закрыто</div>
+                    </div>
+                    
+                    <div class="level locked" data-level="3" id="level3">
+                        <div class="level-info">
+                            <div class="level-title">Уровень 3</div>
+                            <div class="level-subtitle">Субфиксы</div>
+                        </div>
+                        <div class="level-status">Закрыто</div>
+                    </div>
+                </div>
+                
+                <!-- Вторая строка с 2 уровнями -->
+                <div class="levels-row">
+                    <div class="level locked" data-level="4" id="level4">
+                        <div class="level-info">
+                            <div class="level-title">Уровень 4</div>
+                            <div class="level-subtitle">Сложные слова</div>
+                        </div>
+                        <div class="level-status">Закрыто</div>
+                    </div>
+                    
+                    <div class="level locked" data-level="5" id="level5">
+                        <div class="level-info">
+                            <div class="level-title">Уровень 5</div>
+                            <div class="level-subtitle">Игровая задача</div>
+                        </div>
+                        <div class="level-status">Закрыто</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Игровой экран -->
+        <div id="gameSection" class="game-section">
+            <h1>Составь слово</h1>
+            <div class="score" id="score">Уровень: 1</div>
+            
+            <div class="word-display" id="wordDisplay"></div>
+            
+            <div class="syllables-container" id="syllablesContainer"></div>
+            
+            <div class="message" id="message"></div>
+            
+            <div class="controls">
+                <button id="checkBtn">Проверить</button>
+                <button id="resetBtn">Сбросить</button>
+            </div>
+            
+            <button class="back-btn" id="backBtn">Вернуться к уровням</button>
+        </div>
+    </div>
+
+    <script>
+        // База данных слов по уровням
+        const wordsByLevel = {
+            1: [
+                { word: "МАМА", syllables: ["МА", "МА"] },
+                { word: "ПАПА", syllables: ["ПА", "ПА"] },
+                { word: "РАМА", syllables: ["РА", "МА"] },
+                { word: "САНИ", syllables: ["СА", "НИ"] },
+                { word: "ВАЗА", syllables: ["ВА", "ЗА"] }
+            ],
+            2: [
+                { word: "МАЛИНА", syllables: ["МА", "ЛИ", "НА"] },
+                { word: "КАЛИНА", syllables: ["КА", "ЛИ", "НА"] },
+                { word: "РАДИО", syllables: ["РА", "ДИ", "О"] },
+                { word: "САПОГИ", syllables: ["СА", "ПО", "ГИ"] },
+                { word: "ВАГОН", syllables: ["ВА", "ГО", "Н"] }
+            ],
+            3: [
+                { word: "ПОДВОДА", syllables: ["ПОД", "ВО", "ДА"] },
+                { word: "НАДПИСЬ", syllables: ["НАД", "ПИ", "СЬ"] },
+                { word: "ПЕРЕДОМ", syllables: ["ПЕ", "РЕ", "ДОМ"] },
+                { word: "ПРИМЕР", syllables: ["ПРИ", "МЕ", "Р"] },
+                { word: "СУПЕР", syllables: ["СУ", "ПЕ", "Р"] }
+            ],
+            4: [
+                { word: "ТЕЛЕВИЗОР", syllables: ["ТЕ", "ЛЕ", "ВИ", "ЗОР"] },
+                { word: "РАДИОПРИЕМНИК", syllables: ["РА", "ДИ", "О", "ПРИ", "ЕМ", "НИК"] },
+                { word: "ФОТОАППАРАТ", syllables: ["ФО", "ТО", "АП", "ПА", "РАТ"] },
+                { word: "ВЕЛОСИПЕД", syllables: ["ВЕ", "ЛО", "СИ", "ПЕ", "Д"] },
+                { word: "МЕТРОПОЛИТЕН", syllables: ["МЕ", "ТРО", "ПО", "ЛИ", "ТЕН"] }
+            ],
+            5: [
+                { word: "ДОСТОПРИМЕЧАТЕЛЬНОСТЬ", syllables: ["ДО", "СТО", "ПРИ", "МЕ", "ЧА", "ТЕЛЬ", "НОСТЬ"] },
+                { word: "САМОСОВЕРШЕНСТВОВАНИЕ", syllables: ["СА", "МО", "СО", "ВЕР", "ШЕН", "СТВО", "ВА", "НИ", "Е"] },
+                { word: "ЧЕЛОВЕКОНЕНАВИСТНИЧЕСТВО", syllables: ["ЧЕ", "ЛО", "ВЕ", "КО", "НЕ", "НА", "ВИСТ", "НИ", "ЧЕ", "СТВО"] },
+                { word: "ВОДОПРОВОДЧИК", syllables: ["ВО", "ДО", "ПРО", "ВОД", "ЧИК"] },
+                { word: "ЭЛЕКТРОСТАНЦИЯ", syllables: ["Э", "ЛЕК", "ТРО", "СТАН", "ЦИ", "Я"] }
+            ]
+        };
+
+        // Игровые переменные
+        let currentLevel = 1;
+        let currentWord;
+        let selectedSyllables = [];
+        let syllableElements = [];
+        let isDragging = false;
+        let draggedElement = null;
+        let dragOffsetX, dragOffsetY;
+        let originalPos = { x: 0, y: 0 };
+        let score = 0;
+        let unlockedLevels = [1];
+
+        // DOM элементы
+        const levelsSection = document.getElementById('levelsSection');
+        const gameSection = document.getElementById('gameSection');
+        const wordDisplay = document.getElementById('wordDisplay');
+        const syllablesContainer = document.getElementById('syllablesContainer');
+        const messageEl = document.getElementById('message');
+        const checkBtn = document.getElementById('checkBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const backBtn = document.getElementById('backBtn');
+        const scoreEl = document.getElementById('score');
+        const level1 = document.getElementById('level1');
+        const level2 = document.getElementById('level2');
+        const level3 = document.getElementById('level3');
+        const level4 = document.getElementById('level4');
+        const level5 = document.getElementById('level5');
+
+        // Обработчики кликов по уровням
+        level1.addEventListener('click', () => startLevel(1));
+        level2.addEventListener('click', function() {
+            if (this.classList.contains('unlocked')) startLevel(2);
+        });
+        level3.addEventListener('click', function() {
+            if (this.classList.contains('unlocked')) startLevel(3);
+        });
+        level4.addEventListener('click', function() {
+            if (this.classList.contains('unlocked')) startLevel(4);
+        });
+        level5.addEventListener('click', function() {
+            if (this.classList.contains('unlocked')) startLevel(5);
+        });
+
+        // Начало уровня
+        function startLevel(level) {
+            currentLevel = level;
+            levelsSection.style.display = 'none';
+            gameSection.style.display = 'block';
+            scoreEl.textContent = `Уровень: ${level}`;
+            initGame();
+        }
+
+        // Инициализация игры
+        function initGame() {
+            // Выбираем случайное слово для текущего уровня
+            const words = wordsByLevel[currentLevel];
+            currentWord = words[Math.floor(Math.random() * words.length)];
+            
+            // Очищаем предыдущее состояние
+            selectedSyllables = [];
+            syllablesContainer.innerHTML = '';
+            wordDisplay.innerHTML = '';
+            messageEl.textContent = '';
+            messageEl.className = 'message';
+            
+            // Создаем слоты для слова
+            for (let i = 0; i < currentWord.syllables.length; i++) {
+                const slot = document.createElement('div');
+                slot.className = 'word-slot';
+                slot.dataset.index = i;
+                wordDisplay.appendChild(slot);
+            }
+            
+            // Создаем перемешанные слоги
+            const shuffledSyllables = [...currentWord.syllables];
+            shuffleArray(shuffledSyllables);
+            
+            syllableElements = [];
+            const containerRect = syllablesContainer.getBoundingClientRect();
+            
+            shuffledSyllables.forEach((syllable, index) => {
+                const syllableEl = document.createElement('div');
+                syllableEl.className = 'syllable';
+                syllableEl.textContent = syllable;
+                syllableEl.dataset.syllable = syllable;
+                
+                // Позиционируем слоги случайным образом внутри контейнера
+                const maxX = containerRect.width - 60;
+                const maxY = containerRect.height - 60;
+                const posX = Math.random() * maxX;
+                const posY = Math.random() * maxY;
+                
+                syllableEl.style.left = `${posX}px`;
+                syllableEl.style.top = `${posY}px`;
+                
+                // Сохраняем исходную позицию
+                syllableEl.dataset.originalX = posX;
+                syllableEl.dataset.originalY = posY;
+                
+                // Добавляем обработчики перетаскивания
+                syllableEl.addEventListener('mousedown', startDrag);
+                syllableEl.addEventListener('touchstart', startDragTouch, { passive: false });
+                
+                syllablesContainer.appendChild(syllableEl);
+                syllableElements.push(syllableEl);
+            });
+        }
+
+        // Начало перетаскивания (мышь)
+        function startDrag(e) {
+            isDragging = true;
+            draggedElement = e.target;
+            draggedElement.classList.add('dragging');
+            
+            const rect = draggedElement.getBoundingClientRect();
+            dragOffsetX = e.clientX - rect.left;
+            dragOffsetY = e.clientY - rect.top;
+            
+            // Сохраняем исходную позицию
+            originalPos.x = parseFloat(draggedElement.style.left) || 0;
+            originalPos.y = parseFloat(draggedElement.style.top) || 0;
+            
+            e.preventDefault();
+        }
+
+        // Начало перетаскивания (тач)
+        function startDragTouch(e) {
+            isDragging = true;
+            draggedElement = e.target;
+            draggedElement.classList.add('dragging');
+            
+            const rect = draggedElement.getBoundingClientRect();
+            const touch = e.touches[0];
+            dragOffsetX = touch.clientX - rect.left;
+            dragOffsetY = touch.clientY - rect.top;
+            
+            // Сохраняем исходную позицию
+            originalPos.x = parseFloat(draggedElement.style.left) || 0;
+            originalPos.y = parseFloat(draggedElement.style.top) || 0;
+            
+            e.preventDefault();
+        }
+
+        // Процесс перетаскивания (мышь)
+        function drag(e) {
+            if (!isDragging || !draggedElement) return;
+            
+            const x = e.clientX - syllablesContainer.getBoundingClientRect().left - dragOffsetX;
+            const y = e.clientY - syllablesContainer.getBoundingClientRect().top - dragOffsetY;
+            
+            // Ограничиваем перемещение в пределах контейнера
+            const containerRect = syllablesContainer.getBoundingClientRect();
+            const maxX = containerRect.width - draggedElement.offsetWidth;
+            const maxY = containerRect.height - draggedElement.offsetHeight;
+            
+            draggedElement.style.left = `${Math.max(0, Math.min(x, maxX))}px`;
+            draggedElement.style.top = `${Math.max(0, Math.min(y, maxY))}px`;
+        }
+
+        // Процесс перетаскивания (тач)
+        function dragTouch(e) {
+            if (!isDragging || !draggedElement) return;
+            
+            const touch = e.touches[0];
+            const x = touch.clientX - syllablesContainer.getBoundingClientRect().left - dragOffsetX;
+            const y = touch.clientY - syllablesContainer.getBoundingClientRect().top - dragOffsetY;
+            
+            // Ограничиваем перемещение в пределах контейнера
+            const containerRect = syllablesContainer.getBoundingClientRect();
+            const maxX = containerRect.width - draggedElement.offsetWidth;
+            const maxY = containerRect.height - draggedElement.offsetHeight;
+            
+            draggedElement.style.left = `${Math.max(0, Math.min(x, maxX))}px`;
+            draggedElement.style.top = `${Math.max(0, Math.min(y, maxY))}px`;
+            
+            e.preventDefault();
+        }
+
+        // Конец перетаскивания
+        function endDrag(e) {
+            if (!isDragging || !draggedElement) return;
+            
+            draggedElement.classList.remove('dragging');
+            
+            const clientX = e.clientX || (e.changedTouches && e.changedTouches[0].clientX);
+            const clientY = e.clientY || (e.changedTouches && e.changedTouches[0].clientY);
+            
+            if (clientX && clientY) {
+                const slots = document.querySelectorAll('.word-slot');
+                let slotFound = false;
+                
+                slots.forEach(slot => {
+                    const rect = slot.getBoundingClientRect();
+                    
+                    if (
+                        clientX > rect.left &&
+                        clientX < rect.right &&
+                        clientY > rect.top &&
+                        clientY < rect.bottom &&
+                        !selectedSyllables[slot.dataset.index]
+                    ) {
+                        // Помещаем слог в слот
+                        selectedSyllables[slot.dataset.index] = draggedElement.dataset.syllable;
+                        slot.textContent = draggedElement.dataset.syllable;
+                        slot.classList.add('filled');
+                        
+                        // Помечаем слог как использованный
+                        draggedElement.classList.add('used');
+                        
+                        slotFound = true;
+                    }
+                });
+                
+                // Если слог не поместился в слот, возвращаем его на исходную позицию
+                if (!slotFound) {
+                    draggedElement.style.left = `${originalPos.x}px`;
+                    draggedElement.style.top = `${originalPos.y}px`;
+                }
+            }
+            
+            draggedElement = null;
+            isDragging = false;
+            
+            // Проверяем, все ли слоги расставлены
+            checkCompletion();
+        }
+
+        // Проверка завершения
+        function checkCompletion() {
+            if (selectedSyllables.length === currentWord.syllables.length && 
+                !selectedSyllables.includes(undefined)) {
+                const userWord = selectedSyllables.join('');
+                
+                if (userWord === currentWord.word) {
+                    messageEl.textContent = 'Правильно! Молодец!';
+                    messageEl.className = 'message correct';
+                    
+                    // Увеличиваем счет
+                    score++;
+                    
+                    // Разблокируем следующий уровень при необходимости
+                    if (score >= 3 && !unlockedLevels.includes(currentLevel + 1) && currentLevel < 5) {
+                        unlockedLevels.push(currentLevel + 1);
+                        updateLevelsDisplay();
+                    }
+                    
+                    // Автоматически загружаем новое слово через 1.5 секунды
+                    setTimeout(initGame, 1500);
+                }
+            }
+        }
+
+        // Проверка слова
+        function checkWord() {
+            const userWord = selectedSyllables.join('');
+            
+            if (userWord === currentWord.word) {
+                messageEl.textContent = 'Правильно! Молодец!';
+                messageEl.className = 'message correct';
+                
+                // Увеличиваем счет
+                score++;
+                
+                // Разблокируем следующий уровень при необходимости
+                if (score >= 3 && !unlockedLevels.includes(currentLevel + 1) && currentLevel < 5) {
+                    unlockedLevels.push(currentLevel + 1);
+                    updateLevelsDisplay();
+                }
+                
+                setTimeout(initGame, 1500);
+            } else {
+                messageEl.textContent = 'Пока неверно. Попробуй еще!';
+                messageEl.className = 'message incorrect';
+            }
+        }
+
+        // Сброс текущего слова
+        function resetWord() {
+            initGame();
+        }
+
+        // Возврат к выбору уровней
+        function backToLevels() {
+            gameSection.style.display = 'none';
+            levelsSection.style.display = 'block';
+        }
+
+        // Обновление отображения уровней
+        function updateLevelsDisplay() {
+            [level1, level2, level3, level4, level5].forEach((level, index) => {
+                const levelNum = index + 1;
+                if (unlockedLevels.includes(levelNum)) {
+                    level.classList.remove('locked');
+                    level.classList.add('unlocked');
+                    level.querySelector('.level-status').textContent = 'Открыто';
+                } else {
+                    level.classList.remove('unlocked');
+                    level.classList.add('locked');
+                    level.querySelector('.level-status').textContent = 'Закрыто';
+                }
+            });
+        }
+
+        // Перемешивание массива
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        // Назначение обработчиков событий
+        checkBtn.addEventListener('click', checkWord);
+        resetBtn.addEventListener('click', resetWord);
+        backBtn.addEventListener('click', backToLevels);
+        document.addEventListener('mousemove', drag);
+        document.addEventListener('touchmove', dragTouch, { passive: false });
+        document.addEventListener('mouseup', endDrag);
+        document.addEventListener('touchend', endDrag);
+
+        // Инициализация при загрузке
+        updateLevelsDisplay();
+    </script>
+</body>
+</html>

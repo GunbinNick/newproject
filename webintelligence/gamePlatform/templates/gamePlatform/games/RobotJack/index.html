@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Робот Джек - Логическая игра</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: url('https://sun9-5.userapi.com/s/v1/if2/S-MhGEWh8OOEtHcDSZdWh26l5ekvtA4r4RHECC4TVm070YM_VJ3kB-k_vH-SoTCzDputUcIXNLcDH2t0tKE6ojBX.jpg?quality=95&as=32x18,48x27,72x40,108x61,160x90,240x135,360x202,480x270,540x304,640x360,720x405,1080x607,1280x720,1440x810,2560x1440&from=bu&u=wq3hEgu-I6RLFbTDC8HhYJc4F1L4ArttfprMtcdYd_M&cs=2560x1440') no-repeat center center fixed;
+            background-size: cover;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        .game-container {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            width: 90%;
+            max-width: 1000px;
+            text-align: center;
+            position: relative;
+        }
+        
+        h1 {
+            color: #FF5722;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        /* Стили для экрана выбора персонажей */
+        .characters-section {
+            display: block;
+        }
+        
+        .characters-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        .character {
+            width: 150px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .character:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        
+        .character.selected {
+            background: rgba(255, 87, 34, 0.2);
+            border: 3px solid #FF5722;
+        }
+        
+        .character-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: #f5f5f5;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 40px;
+        }
+        
+        .character-name {
+            font-weight: bold;
+            font-size: 18px;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .character-desc {
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+        
+        /* Стили для экрана выбора уровней */
+        .levels-section {
+            display: none;
+        }
+        
+        .levels-container {
+            margin: 20px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .levels-row {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .level {
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 30%;
+            min-width: 150px;
+            border-left: 5px solid #FF5722;
+        }
+        
+        .level.unlocked {
+            background: rgba(255, 87, 34, 0.2);
+        }
+        
+        .level.locked {
+            background: rgba(200, 200, 200, 0.5);
+            cursor: not-allowed;
+        }
+        
+        .level-info {
+            text-align: center;
+        }
+        
+        .level-title {
+            font-weight: bold;
+            font-size: 16px;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .level-subtitle {
+            font-size: 12px;
+            color: #7f8c8d;
+        }
+        
+        .level-status {
+            font-weight: bold;
+            padding: 3px 8px;
+            border-radius: 15px;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        
+        .unlocked .level-status {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .locked .level-status {
+            background: #F44336;
+            color: white;
+        }
+        
+        /* Стили для игрового экрана */
+        .game-section {
+            display: none;
+        }
+        
+        .game-area {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 20px;
+        }
+        
+        .maze-container {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .code-container {
+            flex: 1;
+            min-width: 300px;
+            background: #f5f5f5;
+            border-radius: 10px;
+            padding: 15px;
+        }
+        
+        .maze {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-gap: 5px;
+            margin: 20px auto;
+            width: fit-content;
+        }
+        
+        .cell {
+            width: 60px;
+            height: 60px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            transition: all 0.3s;
+        }
+        
+        .cell.wall {
+            background: #795548;
+        }
+        
+        .cell.start {
+            background: #4CAF50;
+        }
+        
+        .cell.target {
+            background: #FF9800;
+        }
+        
+        .cell.light {
+            background: #FFEB3B;
+            box-shadow: 0 0 15px #FFEB3B;
+        }
+        
+        .robot {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            position: absolute;
+            transition: all 0.5s ease;
+            z-index: 2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+        }
+        
+        /* Стили для разных персонажей */
+        .chip {
+            background: #FF5722;
+            color: white;
+        }
+        
+        .chip::after {
+            content: "🤖";
+        }
+        
+        .tikki {
+            background: #2196F3;
+            color: white;
+        }
+        
+        .tikki::after {
+            content: "👾";
+        }
+        
+        .bippi {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .bippi::after {
+            content: "🦾";
+        }
+        
+        .code-blocks {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .code-block {
+            padding: 10px;
+            background: #2196F3;
+            color: white;
+            border-radius: 5px;
+            cursor: grab;
+            user-select: none;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        
+        .code-block:hover {
+            background: #1976D2;
+            transform: scale(1.02);
+        }
+        
+        .code-block.dragging {
+            opacity: 0.7;
+            transform: scale(1.1);
+        }
+        
+        .code-area {
+            min-height: 150px;
+            background: white;
+            border: 2px dashed #2196F3;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .code-line {
+            padding: 8px;
+            background: #E3F2FD;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .code-line:hover {
+            background: #BBDEFB;
+        }
+        
+        .remove-btn {
+            background: #F44336;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        #runBtn {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        #runBtn:hover {
+            background: #388E3C;
+        }
+        
+        #resetBtn {
+            background: #F44336;
+            color: white;
+        }
+        
+        #resetBtn:hover {
+            background: #D32F2F;
+        }
+        
+        .back-btn {
+            background: #9C27B0;
+            color: white;
+            margin-top: 20px;
+        }
+        
+        .back-btn:hover {
+            background: #7B1FA2;
+        }
+        
+        .next-btn {
+            background: #FF9800;
+            color: white;
+            margin-top: 20px;
+        }
+        
+        .next-btn:hover {
+            background: #F57C00;
+        }
+        
+        .message {
+            margin: 20px 0;
+            min-height: 24px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .success {
+            color: #4CAF50;
+        }
+        
+        .error {
+            color: #F44336;
+        }
+        
+        .level-info {
+            font-size: 18px;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        @media (max-width: 768px) {
+            .game-area {
+                flex-direction: column;
+            }
+            
+            .levels-row {
+                flex-wrap: wrap;
+            }
+            
+            .level {
+                width: 45%;
+                min-width: 120px;
+            }
+            
+            .characters-container {
+                gap: 15px;
+            }
+            
+            .character {
+                width: 120px;
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .level {
+                width: 100%;
+            }
+            
+            .character {
+                width: 100%;
+                flex-direction: row;
+                text-align: left;
+            }
+            
+            .character-avatar {
+                margin-right: 15px;
+                margin-bottom: 0;
+                width: 60px;
+                height: 60px;
+                font-size: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <!-- Экран выбора персонажей -->
+        <div id="charactersSection" class="characters-section">
+            <h1>Робот Джек</h1>
+            <h3>Выбери своего робота</h3>
+            
+            <div class="characters-container">
+                <div class="character" data-character="chip" id="chip">
+                    <div class="character-avatar">🤖</div>
+                    <div class="character-name">Чип</div>
+                    <div class="character-desc">Быстрый и точный</div>
+                </div>
+                
+                <div class="character" data-character="tikki" id="tikki">
+                    <div class="character-avatar">👾</div>
+                    <div class="character-name">Тикки</div>
+                    <div class="character-desc">Любит сложные задачи</div>
+                </div>
+                
+                <div class="character" data-character="bippi" id="bippi">
+                    <div class="character-avatar">🦾</div>
+                    <div class="character-name">Биппи</div>
+                    <div class="character-desc">Сильный и надежный</div>
+                </div>
+            </div>
+            
+            <button class="next-btn" id="nextBtn">Продолжить</button>
+        </div>
+        
+        <!-- Экран выбора уровней -->
+        <div id="levelsSection" class="levels-section">
+            <h1>Робот Джек</h1>
+            <h3 id="characterGreeting">Выбор Уровней</h3>
+            
+            <div class="levels-container">
+                <!-- Первая строка с 3 уровнями -->
+                <div class="levels-row">
+                    <div class="level unlocked" data-level="1" id="level1">
+                        <div class="level-info">
+                            <div class="level-title">Уровень 1</div>
+                            <div class="level-subtitle">Основы программирования</div>
+                        </div>
+                        <div class="level-status">Открыто</div>
+                    </div>
+                    
+                    <div class="level locked" data-level="2" id="level2">
+                        <div class="level-info">
+                            <div class="level-title">Уровень 2</div>
+                            <div class="level-subtitle">Циклы</div>
+                        </div>
+                        <div class="level-status">Закрыто</div>
+                    </div>
+                    
+                    <div class="level locked" data-level="3" id="level3">
+                        <div class="level-info">
+                            <div class="level-title">Уровень 3</div>
+                            <div class="level-subtitle">Условия</div>
+                        </div>
+                        <div class="level-status">Закрыто</div>
+                    </div>
+                </div>
+                
+                <!-- Вторая строка с 2 уровнями -->
+                <div class="levels-row">
+                    <div class="level locked" data-level="4" id="level4">
+                        <div class="level-info">
+                            <div class="level-title">Уровень 4</div>
+                            <div class="level-subtitle">Сложные алгоритмы</div>
+                        </div>
+                        <div class="level-status">Закрыто</div>
+                    </div>
+                    
+                    <div class="level locked" data-level="5" id="level5">
+                        <div class="level-info">
+                            <div class="level-title">Уровень 5</div>
+                            <div class="level-subtitle">Эксперт</div>
+                        </div>
+                        <div class="level-status">Закрыто</div>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="back-btn" id="backToCharactersBtn">Назад к выбору персонажа</button>
+        </div>
+        
+        <!-- Игровой экран -->
+        <div id="gameSection" class="game-section">
+            <h1>Робот Джек</h1>
+            <div class="level-info" id="levelTitle">Уровень 1: Основы программирования</div>
+            
+            <div class="game-area">
+                <div class="maze-container">
+                    <div class="maze" id="maze"></div>
+                </div>
+                
+                <div class="code-container">
+                    <h3>Блоки кода</h3>
+                    <div class="code-blocks" id="codeBlocks">
+                        <div class="code-block" data-command="up">ВВЕРХ</div>
+                        <div class="code-block" data-command="down">ВНИЗ</div>
+                        <div class="code-block" data-command="left">ВЛЕВО</div>
+                        <div class="code-block" data-command="right">ВПРАВО</div>
+                        <div class="code-block" data-command="light">ВКЛЮЧИ СВЕТ</div>
+                        <div class="code-block" data-command="loop2" draggable="true">ПОВТОРИ 2 РАЗА</div>
+                        <div class="code-block" data-command="loop3" draggable="true">ПОВТОРИ 3 РАЗА</div>
+                        <div class="code-block" data-command="endloop">КОНЕЦ ЦИКЛА</div>
+                    </div>
+                    
+                    <h3>Программа</h3>
+                    <div class="code-area" id="codeArea"></div>
+                    
+                    <div class="controls">
+                        <button id="runBtn">Запустить</button>
+                        <button id="resetBtn">Сбросить</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="message" id="message"></div>
+            
+            <button class="back-btn" id="backBtn">Вернуться к уровням</button>
+        </div>
+    </div>
+
+    <script>
+        // Данные уровней
+        const levels = {
+            1: {
+                title: "Основы программирования",
+                maze: [
+                    [0, 0, 0, 0, 0],
+                    [0, 1, 0, 1, 0],
+                    [0, 0, 0, 0, 0],
+                    [0, 1, 0, 1, 0],
+                    [0, 0, 0, 0, 2]
+                ],
+                start: { x: 0, y: 0 },
+                description: "Используй команды ВВЕРХ, ВНИЗ, ВЛЕВО, ВПРАВО и ВКЛЮЧИ СВЕТ, чтобы добраться до цели.",
+                availableCommands: ['up', 'down', 'left', 'right', 'light']
+            },
+            2: {
+                title: "Циклы",
+                maze: [
+                    [0, 0, 0, 0, 0],
+                    [1, 1, 0, 1, 1],
+                    [0, 0, 0, 0, 0],
+                    [1, 1, 0, 1, 1],
+                    [0, 0, 0, 0, 2]
+                ],
+                start: { x: 0, y: 0 },
+                description: "Используй циклы, чтобы сократить программу.",
+                availableCommands: ['up', 'down', 'left', 'right', 'light', 'loop2', 'loop3', 'endloop']
+            },
+            3: {
+                title: "Условия",
+                maze: [
+                    [0, 1, 0, 1, 0],
+                    [0, 1, 0, 1, 0],
+                    [0, 0, 0, 0, 0],
+                    [0, 1, 0, 1, 0],
+                    [0, 0, 0, 0, 2]
+                ],
+                start: { x: 0, y: 0 },
+                description: "Будь осторожен со стенами!",
+                availableCommands: ['up', 'down', 'left', 'right', 'light']
+            },
+            4: {
+                title: "Сложные алгоритмы",
+                maze: [
+                    [0, 1, 0, 1, 0],
+                    [0, 1, 0, 1, 0],
+                    [0, 0, 0, 0, 0],
+                    [1, 1, 0, 1, 1],
+                    [0, 0, 0, 0, 2]
+                ],
+                start: { x: 0, y: 0 },
+                description: "Комбинируй команды для решения сложного лабиринта.",
+                availableCommands: ['up', 'down', 'left', 'right', 'light', 'loop2', 'loop3', 'endloop']
+            },
+            5: {
+                title: "Эксперт",
+                maze: [
+                    [0, 1, 0, 1, 0],
+                    [0, 1, 0, 1, 0],
+                    [0, 0, 0, 0, 0],
+                    [0, 1, 1, 1, 0],
+                    [0, 0, 0, 0, 2]
+                ],
+                start: { x: 0, y: 0 },
+                description: "Самый сложный уровень! Используй все свои знания.",
+                availableCommands: ['up', 'down', 'left', 'right', 'light', 'loop2', 'loop3', 'endloop']
+            }
+        };
+
+        // Игровые переменные
+        let currentLevel = 1;
+        let unlockedLevels = [1];
+        let robot = { x: 0, y: 0 };
+        let maze = [];
+        let draggedBlock = null;
+        let isRunning = false;
+        let selectedCharacter = null;
+
+        // DOM элементы
+        const charactersSection = document.getElementById('charactersSection');
+        const levelsSection = document.getElementById('levelsSection');
+        const gameSection = document.getElementById('gameSection');
+        const mazeElement = document.getElementById('maze');
+        const codeBlocksElement = document.getElementById('codeBlocks');
+        const codeAreaElement = document.getElementById('codeArea');
+        const runBtn = document.getElementById('runBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const backBtn = document.getElementById('backBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const backToCharactersBtn = document.getElementById('backToCharactersBtn');
+        const messageEl = document.getElementById('message');
+        const levelTitleEl = document.getElementById('levelTitle');
+        const characterGreetingEl = document.getElementById('characterGreeting');
+        const level1 = document.getElementById('level1');
+        const level2 = document.getElementById('level2');
+        const level3 = document.getElementById('level3');
+        const level4 = document.getElementById('level4');
+        const level5 = document.getElementById('level5');
+        const chip = document.getElementById('chip');
+        const tikki = document.getElementById('tikki');
+        const bippi = document.getElementById('bippi');
+
+        // Обработчики выбора персонажей
+        chip.addEventListener('click', () => selectCharacter('chip'));
+        tikki.addEventListener('click', () => selectCharacter('tikki'));
+        bippi.addEventListener('click', () => selectCharacter('bippi'));
+
+        // Выбор персонажа
+        function selectCharacter(character) {
+            selectedCharacter = character;
+            
+            // Сброс выделения у всех персонажей
+            document.querySelectorAll('.character').forEach(el => {
+                el.classList.remove('selected');
+            });
+            
+            // Выделение выбранного персонажа
+            document.getElementById(character).classList.add('selected');
+        }
+
+        // Переход к выбору уровней
+        function goToLevels() {
+            if (!selectedCharacter) {
+                alert('Пожалуйста, выберите персонажа!');
+                return;
+            }
+            
+            charactersSection.style.display = 'none';
+            levelsSection.style.display = 'block';
+            
+            // Установка приветствия с именем персонажа
+            const characterNames = {
+                'chip': 'Чип',
+                'tikki': 'Тикки',
+                'bippi': 'Биппи'
+            };
+            characterGreetingEl.textContent = `${characterNames[selectedCharacter]}, выбери уровень`;
+        }
+
+        // Возврат к выбору персонажей
+        function backToCharacters() {
+            levelsSection.style.display = 'none';
+            charactersSection.style.display = 'block';
+        }
+
+        // Обработчики кликов по уровням
+        level1.addEventListener('click', () => startLevel(1));
+        level2.addEventListener('click', function() {
+            if (this.classList.contains('unlocked')) startLevel(2);
+        });
+        level3.addEventListener('click', function() {
+            if (this.classList.contains('unlocked')) startLevel(3);
+        });
+        level4.addEventListener('click', function() {
+            if (this.classList.contains('unlocked')) startLevel(4);
+        });
+        level5.addEventListener('click', function() {
+            if (this.classList.contains('unlocked')) startLevel(5);
+        });
+
+        // Начало уровня
+        function startLevel(level) {
+            currentLevel = level;
+            levelsSection.style.display = 'none';
+            gameSection.style.display = 'block';
+            
+            const levelData = levels[level];
+            levelTitleEl.textContent = `Уровень ${level}: ${levelData.title}`;
+            
+            // Инициализация лабиринта
+            initMaze(levelData.maze);
+            
+            // Установка начальной позиции робота
+            robot = {...levelData.start};
+            updateRobotPosition();
+            
+            // Очистка области кода
+            codeAreaElement.innerHTML = '';
+            
+            // Настройка доступных блоков кода
+            setupCodeBlocks(levelData.availableCommands);
+            
+            // Сброс сообщения
+            messageEl.textContent = levelData.description;
+            messageEl.className = 'message';
+        }
+
+        // Инициализация лабиринта
+        function initMaze(mazeData) {
+            maze = mazeData;
+            mazeElement.innerHTML = '';
+            
+            for (let y = 0; y < maze.length; y++) {
+                for (let x = 0; x < maze[y].length; x++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    
+                    if (maze[y][x] === 1) {
+                        cell.classList.add('wall');
+                    } else if (maze[y][x] === 2) {
+                        cell.classList.add('target');
+                    }
+                    
+                    if (x === robot.x && y === robot.y) {
+                        cell.classList.add('start');
+                    }
+                    
+                    cell.dataset.x = x;
+                    cell.dataset.y = y;
+                    mazeElement.appendChild(cell);
+                }
+            }
+        }
+
+        // Обновление позиции робота
+        function updateRobotPosition() {
+            // Удаляем робота со всех клеток
+            document.querySelectorAll('.robot').forEach(el => el.remove());
+            
+            // Добавляем робота на текущую позицию
+            const cells = document.querySelectorAll('.cell');
+            const cellIndex = robot.y * 5 + robot.x;
+            if (cells[cellIndex]) {
+                const robotElement = document.createElement('div');
+                robotElement.className = `robot ${selectedCharacter}`;
+                cells[cellIndex].appendChild(robotElement);
+            }
+        }
+
+        // Настройка доступных блоков кода
+        function setupCodeBlocks(availableCommands) {
+            codeBlocksElement.innerHTML = '';
+            
+            const commandTemplates = {
+                'up': 'ВВЕРХ',
+                'down': 'ВНИЗ',
+                'left': 'ВЛЕВО',
+                'right': 'ВПРАВО',
+                'light': 'ВКЛЮЧИ СВЕТ',
+                'loop2': 'ПОВТОРИ 2 РАЗА',
+                'loop3': 'ПОВТОРИ 3 РАЗА',
+                'endloop': 'КОНЕЦ ЦИКЛА'
+            };
+            
+            availableCommands.forEach(command => {
+                const block = document.createElement('div');
+                block.className = 'code-block';
+                block.textContent = commandTemplates[command];
+                block.dataset.command = command;
+                block.draggable = true;
+                
+                block.addEventListener('dragstart', () => {
+                    draggedBlock = block;
+                    block.classList.add('dragging');
+                });
+                
+                block.addEventListener('dragend', () => {
+                    block.classList.remove('dragging');
+                    draggedBlock = null;
+                });
+                
+                codeBlocksElement.appendChild(block);
+            });
+        }
+
+        // Инициализация перетаскивания блоков кода
+        function initDragAndDrop() {
+            codeAreaElement.addEventListener('dragover', (e) => {
+                e.preventDefault();
+            });
+            
+            codeAreaElement.addEventListener('drop', (e) => {
+                e.preventDefault();
+                if (draggedBlock) {
+                    addCodeLine(draggedBlock.dataset.command, draggedBlock.textContent);
+                }
+            });
+        }
+
+        // Добавление строки кода
+        function addCodeLine(command, text) {
+            const line = document.createElement('div');
+            line.className = 'code-line';
+            line.dataset.command = command;
+            
+            const textSpan = document.createElement('span');
+            textSpan.textContent = text;
+            
+            const removeBtn = document.createElement('button');
+            removeBtn.className = 'remove-btn';
+            removeBtn.textContent = '×';
+            removeBtn.addEventListener('click', () => {
+                line.remove();
+            });
+            
+            line.appendChild(textSpan);
+            line.appendChild(removeBtn);
+            codeAreaElement.appendChild(line);
+        }
+
+        // Выполнение программы
+        async function runProgram() {
+            if (isRunning) return;
+            isRunning = true;
+            runBtn.disabled = true;
+            
+            // Сброс подсветки
+            document.querySelectorAll('.cell.light').forEach(cell => {
+                cell.classList.remove('light');
+            });
+            
+            const codeLines = Array.from(codeAreaElement.children);
+            let program = [];
+            let loopStack = [];
+            
+            // Преобразуем DOM-элементы в программу
+            for (let i = 0; i < codeLines.length; i++) {
+                const line = codeLines[i];
+                const command = line.dataset.command;
+                
+                if (command === 'loop2' || command === 'loop3') {
+                    const loopCount = command === 'loop2' ? 2 : 3;
+                    const loop = {
+                        type: 'loop',
+                        count: loopCount,
+                        commands: [],
+                        startIndex: i
+                    };
+                    loopStack.push(loop);
+                } else if (command === 'endloop') {
+                    if (loopStack.length === 0) {
+                        showError("Ошибка: нет начала цикла");
+                        return;
+                    }
+                    const loop = loopStack.pop();
+                    program.push(loop);
+                } else {
+                    if (loopStack.length > 0) {
+                        loopStack[loopStack.length - 1].commands.push(command);
+                    } else {
+                        program.push(command);
+                    }
+                }
+            }
+            
+            if (loopStack.length > 0) {
+                showError("Ошибка: незавершенный цикл");
+                return;
+            }
+            
+            // Выполняем программу
+            try {
+                await executeCommands(program);
+                
+                // Проверяем, достиг ли робот цели
+                if (maze[robot.y][robot.x] === 2) {
+                    showSuccess("Успех! Уровень пройден!");
+                    
+                    // Разблокируем следующий уровень
+                    if (!unlockedLevels.includes(currentLevel + 1) && currentLevel < 5) {
+                        unlockedLevels.push(currentLevel + 1);
+                        updateLevelsDisplay();
+                    }
+                }
+            } catch (error) {
+                showError(error.message);
+            } finally {
+                isRunning = false;
+                runBtn.disabled = false;
+            }
+        }
+
+        // Выполнение команд
+        async function executeCommands(commands) {
+            for (const cmd of commands) {
+                if (typeof cmd === 'object' && cmd.type === 'loop') {
+                    for (let i = 0; i < cmd.count; i++) {
+                        await executeCommands(cmd.commands);
+                    }
+                } else {
+                    await executeCommand(cmd);
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                }
+            }
+        }
+
+        // Выполнение одной команды
+        async function executeCommand(command) {
+            switch (command) {
+                case 'up':
+                    await moveRobot(0, -1);
+                    break;
+                case 'down':
+                    await moveRobot(0, 1);
+                    break;
+                case 'left':
+                    await moveRobot(-1, 0);
+                    break;
+                case 'right':
+                    await moveRobot(1, 0);
+                    break;
+                case 'light':
+                    lightCell();
+                    break;
+                default:
+                    throw new Error(`Неизвестная команда: ${command}`);
+            }
+            updateRobotPosition();
+        }
+
+        // Движение робота
+        async function moveRobot(dx, dy) {
+            const newX = robot.x + dx;
+            const newY = robot.y + dy;
+            
+            // Проверка на выход за границы
+            if (newX < 0 || newX >= 5 || newY < 0 || newY >= 5) {
+                throw new Error("Робот вышел за границы лабиринта!");
+            }
+            
+            // Проверка на стену
+            if (maze[newY][newX] === 1) {
+                throw new Error("Робот столкнулся со стеной!");
+            }
+            
+            robot.x = newX;
+            robot.y = newY;
+        }
+
+        // Включение света
+        function lightCell() {
+            const cellIndex = robot.y * 5 + robot.x;
+            const cells = document.querySelectorAll('.cell');
+            cells[cellIndex].classList.add('light');
+        }
+
+        // Сброс программы
+        function resetProgram() {
+            codeAreaElement.innerHTML = '';
+            document.querySelectorAll('.cell.light').forEach(cell => {
+                cell.classList.remove('light');
+            });
+            
+            // Возвращаем робота в начальное положение
+            const levelData = levels[currentLevel];
+            robot = {...levelData.start};
+            updateRobotPosition();
+            
+            messageEl.textContent = levels[currentLevel].description;
+            messageEl.className = 'message';
+        }
+
+        // Показать сообщение об успехе
+        function showSuccess(message) {
+            messageEl.textContent = message;
+            messageEl.className = 'message success';
+        }
+
+        // Показать сообщение об ошибке
+        function showError(message) {
+            messageEl.textContent = message;
+            messageEl.className = 'message error';
+        }
+
+        // Возврат к выбору уровней
+        function backToLevels() {
+            gameSection.style.display = 'none';
+            levelsSection.style.display = 'block';
+        }
+
+        // Обновление отображения уровней
+        function updateLevelsDisplay() {
+            [level1, level2, level3, level4, level5].forEach((level, index) => {
+                const levelNum = index + 1;
+                if (unlockedLevels.includes(levelNum)) {
+                    level.classList.remove('locked');
+                    level.classList.add('unlocked');
+                    level.querySelector('.level-status').textContent = 'Открыто';
+                } else {
+                    level.classList.remove('unlocked');
+                    level.classList.add('locked');
+                    level.querySelector('.level-status').textContent = 'Закрыто';
+                }
+            });
+        }
+
+        // Инициализация игры
+        function initGame() {
+            initDragAndDrop();
+            updateLevelsDisplay();
+            
+            // Назначение обработчиков событий
+            runBtn.addEventListener('click', runProgram);
+            resetBtn.addEventListener('click', resetProgram);
+            backBtn.addEventListener('click', backToLevels);
+            nextBtn.addEventListener('click', goToLevels);
+            backToCharactersBtn.addEventListener('click', backToCharacters);
+            
+            // Выбираем первого персонажа по умолчанию
+            selectCharacter('chip');
+        }
+
+        // Запуск игры при загрузке
+        window.onload = initGame;
+    </script>
+</body>
+</html>

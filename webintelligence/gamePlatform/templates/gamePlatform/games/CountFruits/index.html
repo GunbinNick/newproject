@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Фруктовая математика</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: url('https://sun9-5.userapi.com/s/v1/if2/S-MhGEWh8OOEtHcDSZdWh26l5ekvtA4r4RHECC4TVm070YM_VJ3kB-k_vH-SoTCzDputUcIXNLcDH2t0tKE6ojBX.jpg?quality=95&as=32x18,48x27,72x40,108x61,160x90,240x135,360x202,480x270,540x304,640x360,720x405,1080x607,1280x720,1440x810,2560x1440&from=bu&u=wq3hEgu-I6RLFbTDC8HhYJc4F1L4ArttfprMtcdYd_M&cs=2560x1440') no-repeat center center fixed;
+            background-size: cover;
+            text-align: center;
+        }
+        
+        .game-container {
+            background-color: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(5px);
+            border-radius: 15px;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            width: 90%;
+            max-width: 800px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        
+        .levels-container {
+            margin: 20px 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .level {
+            padding: 15px;
+            width: 150px;
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .level.unlocked {
+            background-color: #e8f5e9;
+        }
+        
+        .level.unlocked:hover {
+            background-color: #c8e6c9;
+            transform: translateY(-2px);
+        }
+        
+        .level.locked {
+            background-color: #f5f5f5;
+            color: #9e9e9e;
+            cursor: not-allowed;
+        }
+        
+        .level-title {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 5px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .level-icon {
+            font-size: 30px;
+            margin-bottom: 5px;
+        }
+        
+        .level-status {
+            font-size: 14px;
+        }
+        
+        .locked .level-status {
+            color: #9e9e9e;
+        }
+        
+        .unlocked .level-status {
+            color: #2e7d32;
+        }
+        
+        .fruit-board {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            min-height: 300px;
+            align-items: center;
+        }
+        
+        .fruit-item {
+            width: 80px;
+            height: 80px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .fruit-item:hover {
+            transform: scale(1.1);
+        }
+        
+        .game-section {
+            display: none;
+        }
+        
+        .input-container {
+            margin: 20px 0;
+        }
+        
+        input {
+            padding: 12px 15px;
+            font-size: 18px;
+            border: 2px solid #3498db;
+            border-radius: 5px;
+            width: 80px;
+            text-align: center;
+        }
+        
+        button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 10px 5px;
+        }
+        
+        #checkBtn {
+            background: #3498db;
+            color: white;
+        }
+        
+        #checkBtn:hover {
+            background: #2980b9;
+        }
+        
+        #nextBtn {
+            background: #2ecc71;
+            color: white;
+        }
+        
+        #nextBtn:hover {
+            background: #27ae60;
+        }
+        
+        .message {
+            margin: 20px 0;
+            min-height: 24px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .correct {
+            color: #27ae60;
+        }
+        
+        .incorrect {
+            color: #e74c3c;
+        }
+        
+        .score {
+            font-size: 20px;
+            margin-top: 20px;
+            color: #2c3e50;
+        }
+        
+        .timer {
+            font-size: 18px;
+            color: #e74c3c;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        
+        .target-fruit {
+            font-size: 24px;
+            margin: 15px 0;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .back-btn {
+            background: #9b59b6;
+            color: white;
+            margin-top: 20px;
+        }
+        
+        .back-btn:hover {
+            background: #8e44ad;
+        }
+        
+        .level-progress {
+            height: 5px;
+            background: #ddd;
+            border-radius: 3px;
+            margin-top: 8px;
+            overflow: hidden;
+            width: 100%;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: #2ecc71;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        .levels-row {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>Фруктовая математика</h1>
+        
+        <div id="levelsSection">
+            <h2>Выбор Уровней</h2>
+            <div class="levels-container">
+                <div class="levels-row">
+                    <div class="level unlocked" data-level="1" id="level1">
+                        <div class="level-title">
+                            <span class="level-icon">🍎</span>
+                            Уровень 1. Фруктовый старт
+                        </div>
+                        <div class="level-status">Открыто</div>
+                        <div class="level-progress"><div class="progress-bar" style="width: 0%"></div></div>
+                    </div>
+                    <div class="level locked" data-level="2" id="level2">
+                        <div class="level-title">
+                            <span class="level-icon">🍌</span>
+                            Уровень 2. Фруктовый микс
+                        </div>
+                        <div class="level-status">Закрыто</div>
+                        <div class="level-progress"><div class="progress-bar" style="width: 0%"></div></div>
+                    </div>
+                    <div class="level locked" data-level="3" id="level3">
+                        <div class="level-title">
+                            <span class="level-icon">🍇</span>
+                            Уровень 3. Фруктовый лабиринт
+                        </div>
+                        <div class="level-status">Закрыто</div>
+                        <div class="level-progress"><div class="progress-bar" style="width: 0%"></div></div>
+                    </div>
+                </div>
+                <div class="levels-row">
+                    <div class="level locked" data-level="4" id="level4">
+                        <div class="level-title">
+                            <span class="level-icon">🍓</span>
+                            Уровень 4. Фруктовый вызов
+                        </div>
+                        <div class="level-status">Закрыто</div>
+                        <div class="level-progress"><div class="progress-bar" style="width: 0%"></div></div>
+                    </div>
+                    <div class="level locked" data-level="5" id="level5">
+                        <div class="level-title">
+                            <span class="level-icon">🍐</span>
+                            Уровень 5. Фруктовый мастер
+                        </div>
+                        <div class="level-status">Закрыто</div>
+                        <div class="level-progress"><div class="progress-bar" style="width: 0%"></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="gameSection" class="game-section">
+            <div class="timer" id="timer">Время: 30</div>
+            <div class="target-fruit" id="targetFruit">Сколько <span id="currentFruitName">фруктов</span> на картинке?</div>
+            
+            <div class="fruit-board" id="fruitBoard"></div>
+            
+            <div class="input-container">
+                <input type="number" id="answerInput" placeholder="Число" min="1">
+            </div>
+            
+            <div>
+                <button id="checkBtn">Проверить</button>
+                <button id="nextBtn" style="display:none;">Следующий вопрос</button>
+            </div>
+            
+            <div class="message" id="message"></div>
+            <div class="score" id="score">Счет: 0</div>
+            
+            <button class="back-btn" id="backBtn">Вернуться к уровням</button>
+        </div>
+    </div>
+
+    <script>
+        // База данных фруктов
+        const fruitsDatabase = {
+            banana: {
+                name: "бананов",
+                image: 'https://e7.pngegg.com/pngimages/650/940/png-clipart-banana-bread-fruit-banana-cream-food-desktop-wallpaper.png',
+                counts: { 
+                    1: [1, 2, 3],   // Уровень 1
+                    2: [3, 4, 5],   // Уровень 2
+                    3: [5, 6, 7],   // Уровень 3
+                    4: [7, 8, 9],   // Уровень 4
+                    5: [9, 10, 11]  // Уровень 5
+                }
+            },
+            apple: {
+                name: "яблок",
+                image: 'https://banner2.cleanpng.com/20180802/yzy/kisspng-mcintosh-red-fuji-apple-ralls-janet-idared-5b62d7e4310d27.8571382015332044522009.jpg',
+                counts: { 
+                    1: [1, 2, 3],
+                    2: [3, 4, 5],
+                    3: [5, 6, 7],
+                    4: [7, 8, 9],
+                    5: [9, 10, 11]
+                }
+            },
+            orange: {
+                name: "апельсинов",
+                image: 'https://e7.pngegg.com/pngimages/1022/408/png-clipart-orange-fruit-clementine-mandarin-orange-fruit-orange-oranges-natural-foods-food.png',
+                counts: { 
+                    1: [1, 2, 3],
+                    2: [3, 4, 5],
+                    3: [5, 6, 7],
+                    4: [7, 8, 9],
+                    5: [9, 10, 11]
+                }
+            },
+            berry: {
+                name: "малин",
+                image: 'https://avatars.mds.yandex.net/i?id=7e96323204115fc949ff7b8b31154901ab9e4525-10230136-images-thumbs&n=13',
+                counts: { 
+                    1: [3, 4, 5],
+                    2: [5, 6, 7],
+                    3: [7, 8, 9],
+                    4: [9, 10, 11],
+                    5: [11, 12, 13]
+                }
+            },
+            pear: {
+                name: "груш",
+                image: 'https://banner2.cleanpng.com/20190520/crl/kisspng-portable-network-graphics-clip-art-image-photograp-pear-png-free-download-13-freepngdownload-com-5ce322f3705b13.0627400915583894914602.jpg',
+                counts: { 
+                    1: [1, 2, 3],
+                    2: [3, 4, 5],
+                    3: [5, 6, 7],
+                    4: [7, 8, 9],
+                    5: [9, 10, 11]
+                }
+            },
+            grape: {
+                name: "виноградин",
+                image: 'https://avatars.mds.yandex.net/i?id=10aa7ff560335c9837d1ba23af486bfb704e8fc3-8196710-images-thumbs&n=13',
+                counts: { 
+                    1: [5, 6, 7],
+                    2: [7, 8, 9],
+                    3: [9, 10, 11],
+                    4: [11, 12, 13],
+                    5: [13, 14, 15]
+                }
+            }
+        };
+
+        // Игровые переменные
+        let score = 0;
+        let currentQuestion = 0;
+        const questionsPerGame = 5;
+        let timer;
+        let timeLeft = 30;
+        let currentTargetFruit = "";
+        let correctAnswer = 0;
+        let fruitElements = [];
+        let currentLevel = 1;
+        let unlockedLevels = [1]; // Начинаем с разблокированного первого уровня
+        let levelProgress = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0}; // Прогресс по уровням
+
+        // DOM элементы
+        const levelsSection = document.getElementById('levelsSection');
+        const gameSection = document.getElementById('gameSection');
+        const fruitBoard = document.getElementById('fruitBoard');
+        const answerInput = document.getElementById('answerInput');
+        const messageEl = document.getElementById('message');
+        const checkBtn = document.getElementById('checkBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const scoreEl = document.getElementById('score');
+        const currentFruitName = document.getElementById('currentFruitName');
+        const targetFruitEl = document.getElementById('targetFruit');
+        const timerEl = document.getElementById('timer');
+        const backBtn = document.getElementById('backBtn');
+        const level1 = document.getElementById('level1');
+        const level2 = document.getElementById('level2');
+        const level3 = document.getElementById('level3');
+        const level4 = document.getElementById('level4');
+        const level5 = document.getElementById('level5');
+
+        // Обработчики кликов по уровням
+        level1.addEventListener('click', () => startLevel(1));
+        level2.addEventListener('click', function() {
+            if (this.classList.contains('unlocked')) startLevel(2);
+        });
+        level3.addEventListener('click', function() {
+            if (this.classList.contains('unlocked')) startLevel(3);
+        });
+        level4.addEventListener('click', function() {
+            if (this.classList.contains('unlocked')) startLevel(4);
+        });
+        level5.addEventListener('click', function() {
+            if (this.classList.contains('unlocked')) startLevel(5);
+        });
+
+        // Таймер
+        function startTimer() {
+            clearInterval(timer);
+            timeLeft = 30;
+            timerEl.textContent = `Время: ${timeLeft}`;
+            
+            timer = setInterval(() => {
+                timeLeft--;
+                timerEl.textContent = `Время: ${timeLeft}`;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    messageEl.textContent = `Время вышло! Правильный ответ: ${correctAnswer}`;
+                    messageEl.className = 'message incorrect';
+                    checkBtn.style.display = 'none';
+                    nextBtn.style.display = 'inline-block';
+                }
+            }, 1000);
+        }
+
+        // Создание игрового поля с фруктами
+        function createFruitBoard() {
+            fruitBoard.innerHTML = '';
+            fruitElements = [];
+            
+            // Выбираем случайный фрукт как цель
+            const allFruits = Object.keys(fruitsDatabase);
+            currentTargetFruit = allFruits[Math.floor(Math.random() * allFruits.length)];
+            const targetFruitData = fruitsDatabase[currentTargetFruit];
+            
+            // Получаем количество для выбранного уровня
+            const possibleCounts = targetFruitData.counts[currentLevel];
+            correctAnswer = possibleCounts[Math.floor(Math.random() * possibleCounts.length)];
+            
+            // Устанавливаем вопрос
+            currentFruitName.textContent = targetFruitData.name;
+            targetFruitEl.textContent = `Сколько ${targetFruitData.name} на картинке?`;
+            
+            // Создаем все фрукты на доске
+            for (let i = 0; i < correctAnswer; i++) {
+                const fruitElement = document.createElement('div');
+                fruitElement.className = 'fruit-item';
+                fruitElement.style.backgroundImage = `url('${targetFruitData.image}')`;
+                fruitElement.dataset.fruit = currentTargetFruit;
+                fruitBoard.appendChild(fruitElement);
+                fruitElements.push(fruitElement);
+            }
+            
+            // Добавляем отвлекающие фрукты (количество зависит от уровня)
+            const distractingFruitsCount = currentLevel * 2 + 3;
+            for (let i = 0; i < distractingFruitsCount; i++) {
+                const randomFruit = allFruits[Math.floor(Math.random() * allFruits.length)];
+                if (randomFruit !== currentTargetFruit) {
+                    const fruitData = fruitsDatabase[randomFruit];
+                    const fruitElement = document.createElement('div');
+                    fruitElement.className = 'fruit-item';
+                    fruitElement.style.backgroundImage = `url('${fruitData.image}')`;
+                    fruitElement.dataset.fruit = randomFruit;
+                    fruitBoard.appendChild(fruitElement);
+                    fruitElements.push(fruitElement);
+                }
+            }
+            
+            // Перемешиваем фрукты на доске
+            shuffleFruits();
+        }
+
+        // Перемешивание фруктов на доске
+        function shuffleFruits() {
+            fruitElements.sort(() => Math.random() - 0.5);
+            fruitElements.forEach((fruit, index) => {
+                fruit.style.order = index;
+            });
+        }
+
+        // Начало уровня
+        function startLevel(level) {
+            currentLevel = level;
+            levelsSection.style.display = 'none';
+            gameSection.style.display = 'block';
+            score = 0;
+            currentQuestion = 0;
+            scoreEl.textContent = `Счет: ${score}`;
+            nextQuestion();
+        }
+
+        // Следующий вопрос
+        function nextQuestion() {
+            if (currentQuestion >= questionsPerGame) {
+                endGame();
+                return;
+            }
+            
+            createFruitBoard();
+            answerInput.value = '';
+            messageEl.textContent = '';
+            messageEl.className = 'message';
+            checkBtn.style.display = 'inline-block';
+            nextBtn.style.display = 'none';
+            answerInput.focus();
+            startTimer();
+            currentQuestion++;
+        }
+
+        // Проверка ответа
+        function checkAnswer() {
+            clearInterval(timer);
+            
+            const userAnswer = parseInt(answerInput.value);
+            
+            if (isNaN(userAnswer)) {
+                messageEl.textContent = 'Пожалуйста, введите число!';
+                messageEl.className = 'message incorrect';
+                startTimer();
+                return;
+            }
+            
+            if (userAnswer === correctAnswer) {
+                messageEl.textContent = 'Правильно! Молодец!';
+                messageEl.className = 'message correct';
+                score++;
+                scoreEl.textContent = `Счет: ${score}`;
+            } else {
+                messageEl.textContent = `Пока неверно. Правильный ответ: ${correctAnswer}`;
+                messageEl.className = 'message incorrect';
+            }
+            
+            checkBtn.style.display = 'none';
+            nextBtn.style.display = 'inline-block';
+        }
+
+        // Завершение игры
+        function endGame() {
+            clearInterval(timer);
+            messageEl.textContent = `Игра окончена! Ваш счет: ${score} из ${questionsPerGame}`;
+            messageEl.className = 'message';
+            
+            checkBtn.style.display = 'none';
+            nextBtn.style.display = 'none';
+            
+            // Обновляем прогресс уровня
+            levelProgress[currentLevel] = score;
+            updateLevelProgress(currentLevel);
+            
+            // Разблокируем следующий уровень, если игрок набрал 3+ правильных ответа
+            if (score >= 3 && currentLevel < 5) {
+                if (!unlockedLevels.includes(currentLevel + 1)) {
+                    unlockedLevels.push(currentLevel + 1);
+                    updateLevelsDisplay();
+                }
+            }
+        }
+
+        // Обновление отображения уровней
+        function updateLevelsDisplay() {
+            [level1, level2, level3, level4, level5].forEach((level, index) => {
+                const levelNum = index + 1;
+                if (unlockedLevels.includes(levelNum)) {
+                    level.classList.remove('locked');
+                    level.classList.add('unlocked');
+                    level.querySelector('.level-status').textContent = 'Открыто';
+                    level.querySelector('.level-status').style.color = '#2e7d32';
+                } else {
+                    level.classList.remove('unlocked');
+                    level.classList.add('locked');
+                    level.querySelector('.level-status').textContent = 'Закрыто';
+                    level.querySelector('.level-status').style.color = '#9e9e9e';
+                }
+            });
+        }
+
+        // Обновление прогресса уровня
+        function updateLevelProgress(level) {
+            const progressBar = document.querySelector(`#level${level} .progress-bar`);
+            const progressPercent = (levelProgress[level] / questionsPerGame) * 100;
+            progressBar.style.width = `${progressPercent}%`;
+        }
+
+        // Возврат к выбору уровней
+        backBtn.addEventListener('click', function() {
+            gameSection.style.display = 'none';
+            levelsSection.style.display = 'block';
+            updateLevelsDisplay();
+        });
+
+        // Назначение обработчиков событий
+        checkBtn.addEventListener('click', checkAnswer);
+        nextBtn.addEventListener('click', nextQuestion);
+        answerInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+
+        // Инициализация
+        updateLevelsDisplay();
+    </script>
+</body>
+</html>
