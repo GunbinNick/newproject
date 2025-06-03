@@ -13,14 +13,10 @@
 
 <body>
 {% block navmenu %}
-    <div class="white-line">
-        <a href="{% url 'mainHome:home' %}">
-            <img src={% static 'mainHome/images/icon.jpg' %} alt="Логотип" class="home-icon">
-        </a>
-    </div>
     <header class="full-width-nav">
         <nav>
             <ul class="nav-list">
+                <li><a href="{% url 'mainHome:home' %}" class="nav-btn">Главная страница</a></li>
                 <li><a href="{% url 'mainHome:about' %}" class="nav-btn">О нас</a></li>
                 <li><a href="{% url 'mainHome:programs' %}" class="nav-btn">Программы</a></li>
                 <li><a href="{% url 'mainHome:events' %}" class="nav-btn">События</a></li>

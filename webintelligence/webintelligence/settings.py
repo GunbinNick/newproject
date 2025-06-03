@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-3pknj=h*4iu(jk)6xouc25^-x(u$kcmud$a%047cj&h_j&2&)+
 DEBUG = True
 
 ALLOWED_HOSTS = ['itcity.online', 'www.itcity.online', 'localhost', '127.0.0.1']
-
+CSRF_TRUSTED_ORIGINS = ['http://itcity.online', 'http://www.itcity.online']
 # Application definition
 
 INSTALLED_APPS = [
